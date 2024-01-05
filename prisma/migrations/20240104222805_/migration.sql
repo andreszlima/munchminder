@@ -1,0 +1,53 @@
+-- CreateTable
+CREATE TABLE "Item" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "price" INTEGER NOT NULL,
+    "image" TEXT,
+    "marketId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Item_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Market" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Market_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "List" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "List_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ListItem" (
+    "id" SERIAL NOT NULL,
+    "listId" INTEGER NOT NULL,
+    "itemId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "ListItem_pkey" PRIMARY KEY ("id")
+);
+
+-- AddForeignKey
+ALTER TABLE "Item" ADD CONSTRAINT "Item_marketId_fkey" FOREIGN KEY ("marketId") REFERENCES "Market"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ListItem" ADD CONSTRAINT "ListItem_listId_fkey" FOREIGN KEY ("listId") REFERENCES "List"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ListItem" ADD CONSTRAINT "ListItem_itemId_fkey" FOREIGN KEY ("itemId") REFERENCES "Item"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

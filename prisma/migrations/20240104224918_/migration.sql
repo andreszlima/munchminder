@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Item" ADD COLUMN     "defaultAmount" DOUBLE PRECISION NOT NULL DEFAULT 1;
