@@ -15,6 +15,7 @@ model Item {
   name        String
   price       Float
   defaultAmount Float  @default(1)
+  tax         Float    @default(0)
   market      Market   @relation(fields: [marketId], references: [id])
   marketId    Int
   listitem    ListItem[]
@@ -26,6 +27,7 @@ model Item {
 model Market {
   id          Int      @id @default(autoincrement())
   name        String
+  province    String   @default("Ontario")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt @default(now())
   items       Item[]
@@ -35,6 +37,7 @@ model List {
   id          Int      @id @default(autoincrement())
   name        String @default("Shopping list")
   userId      String
+  split       Boolean  @default(false)
   listitem    ListItem[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt @default(now())
