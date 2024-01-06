@@ -63,8 +63,8 @@ export default function AllMarkets({ markets, fetchMarkets }: AllMarketsProps) {
   );
 
   return (
-    <div>
-      <Table>
+    <div className="flex w-screen">
+      <Table className="">
         <TableCaption>A list of your recent invoices.</TableCaption>
         <TableHeader>
           <TableRow>

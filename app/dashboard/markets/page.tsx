@@ -44,20 +44,22 @@ function MarketsPage() {
   }, []);
 
   return (
-    <div>     
-      <h1>All markets</h1>
-      <AllMarkets markets={markets} fetchMarkets={fetchMarkets} />
+    <div>
       <div className="flex justify-center">
         <Card>
           <CardHeader>
             <CardTitle>New market</CardTitle>
-            <CardDescription>Add a new market to have items assigned to</CardDescription>
+            <CardDescription>
+              Add a new market to have items assigned to
+            </CardDescription>
           </CardHeader>
           <CardContent>
-          <NewMarket action={handleCreateMarket} />
+            <NewMarket action={handleCreateMarket} />
           </CardContent>
         </Card>
       </div>
+      <h1>All markets</h1>
+      <AllMarkets markets={markets} fetchMarkets={fetchMarkets} />
     </div>
   );
 }

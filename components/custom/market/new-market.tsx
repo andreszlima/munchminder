@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useState, FormEvent } from 'react';
+import { Button } from '@/components/ui/button';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import React from 'react';
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import * as z from "zod"
 
 type Market = {
   name: string;
@@ -11,25 +17,47 @@ type NewMarketProps = {
   action: (market: Market) => Promise<void>;
 };
 
-export default function NewMarket({ action }: NewMarketProps) {
-  const [name, setName] = useState('');
-  const [province, setProvince] = useState('');
+const formSchema = z.object({
+  name: z.string().min(2, {
+    message: "Market name must be at least 2 characters.",
+  }),
+})
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    await action({ name, province });
-    // Reset form
-    setName('');
-    setProvince('');
+export default function NewMarket({ action }: NewMarketProps) {
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      province: "Ontario",
+    },
+  })
+
+  const onSubmit = async (data: Market) => {
+    await action(data);
+    form.reset();
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="name">Name</label>
-      <input type="text" id="name" name="name" value={name} onChange={e => setName(e.target.value)} />
-      <label htmlFor="province">Province</label>
-      <input type="text" id="province" name="province" value={province} onChange={e => setProvince(e.target.value)} />
-      <button type="submit">Submit</button>
-    </form>
-  );
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Market name</FormLabel>
+              <FormControl>
+                <Input placeholder="Market name here" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Submit</Button>
+      </form>
+    </Form>
+  )
 }
