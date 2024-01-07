@@ -6,8 +6,6 @@ import React from 'react'
 function DashboardPage() {
   return (
     <div>
-      Logged in dashboard
-      <UserButton afterSignOutUrl="/"/>
       <MyTable />
     </div>
   )

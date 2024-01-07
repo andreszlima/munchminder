@@ -9,10 +9,9 @@ export async function IndexMarkets() {
             id: true,
             name: true,
             province: true,
-            updatedAt: true,
         },
         orderBy: {
-            updatedAt: "desc",
+            id: "desc",
         },
     });
     return markets;

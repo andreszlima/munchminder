@@ -47,16 +47,16 @@ export default function NewMarket({ action }: NewMarketProps) {
             <FormItem>
               <FormLabel>Market name</FormLabel>
               <FormControl>
-                <Input placeholder="Market name here" {...field} />
+                <Input placeholder="Name here" {...field} />
               </FormControl>
               <FormDescription>
-                This is your public display name.
+                This is the market common name
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Add market</Button>
       </form>
     </Form>
   )

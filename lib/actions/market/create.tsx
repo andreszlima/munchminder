@@ -1,9 +1,7 @@
 // Create market from prisma/schema.prisma
 "use server";
 
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "@/prisma/client";
 
 // type of market
 type Market = {

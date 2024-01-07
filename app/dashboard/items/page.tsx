@@ -14,55 +14,58 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import NewItem from "@/components/custom/items/new-item";
+import { CreateItem } from "@/lib/actions/item/create";
 
-type Market = {
+// type of item
+type Item = {
   id: number;
   name: string;
-  province: string;
+  price: number;
+  defaultAmount: number;
+  tax: number;
+  marketId: string;
+  imageLink?: string;
 };
 
-type NewMarket = {
+// type of item
+type NewItem = {
   name: string;
-  province: string;
+  price: number;
+  defaultAmount: number;
+  tax: number;
+  marketId: string;
+  imageLink?: string;
 };
 
-function MarketsPage() {
-  const [markets, setMarkets] = useState<Market[]>([]);
+function ItemsPage() {
+  const [items, setItems] = useState<Item[]>([]);
 
-  const fetchMarkets = async () => {
-    const data = await IndexMarkets();
-    setMarkets(data);
+  const handleCreateItem = async (item: NewItem) => {
+    await CreateItem(item);
+
   };
-
-  const handleCreateMarket = async (market: NewMarket) => {
-    await CreateMarket(market);
-    fetchMarkets();
-  };
-
-  useEffect(() => {
-    fetchMarkets();
-  }, []);
 
   return (
     <div>
-      <div className="flex justify-center p-8">
+      <div className="flex justify-center">
         <Card>
           <CardHeader>
-            <CardTitle>New market</CardTitle>
+            <CardTitle>New item</CardTitle>
             <CardDescription>
               Add a new market to have items assigned to
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <NewMarket action={handleCreateMarket} />
+            <NewItem action={handleCreateItem} />
           </CardContent>
         </Card>
       </div>
       <div className="p-8">
-        <AllMarkets markets={markets} fetchMarkets={fetchMarkets} />
+        {/* <AllMarkets items={items} fetchMarkets={fetchItems} /> */}
       </div>
     </div>
   );
 }
 
-export default MarketsPage;
+export default ItemsPage;
