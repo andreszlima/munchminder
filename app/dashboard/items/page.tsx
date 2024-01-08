@@ -1,21 +1,17 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { CreateMarket } from "@/lib/actions/market/create";
-import { IndexMarkets } from "@/lib/actions/market";
-import NewMarket from "@/components/custom/market/new-market";
-import AllMarkets from "@/components/custom/market/all-markets";
+import { useEffect, useState } from "react";
 
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+  CardDescription, CardHeader,
+  CardTitle
 } from "@/components/ui/card";
 import NewItem from "@/components/custom/items/new-item";
 import { CreateItem } from "@/lib/actions/item/create";
+import { IndexItems } from "@/lib/actions/item";
+import AllItems from "@/components/custom/items/all-items";
 
 // type of item
 type Item = {
@@ -24,27 +20,42 @@ type Item = {
   price: number;
   defaultAmount: number;
   tax: number;
-  marketId: string;
-  imageLink?: string;
+  marketId: number;
+  imageLink: string;
 };
 
 // type of item
-type NewItem = {
+type FormData = {
+  id: number;
   name: string;
   price: number;
   defaultAmount: number;
   tax: number;
   marketId: string;
-  imageLink?: string;
+  imageLink: string;
 };
 
 function ItemsPage() {
   const [items, setItems] = useState<Item[]>([]);
 
-  const handleCreateItem = async (item: NewItem) => {
+  const fetchItems = async () => {
+    const data = await IndexItems();
+    setItems(data);
+  };
+
+  const handleCreateItem = async (formData: FormData) => {
+    const item: Item = {
+      ...formData,
+      marketId: Number(formData.marketId),
+    };
+
     await CreateItem(item);
 
   };
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
 
   return (
     <div>
@@ -62,7 +73,7 @@ function ItemsPage() {
         </Card>
       </div>
       <div className="p-8">
-        {/* <AllMarkets items={items} fetchMarkets={fetchItems} /> */}
+        <AllItems items={items} fetchItems={fetchItems} />
       </div>
     </div>
   );

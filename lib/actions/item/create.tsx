@@ -9,7 +9,7 @@ type Item = {
   price: number;
   defaultAmount: number;
   tax: number;
-  marketId: string | number;
+  marketId: number;
 };
 
 export async function CreateItem(item: Item) {
@@ -19,7 +19,7 @@ export async function CreateItem(item: Item) {
       price: item.price,
       defaultAmount: item.defaultAmount,
       tax: item.tax,
-      marketId: item.marketId as number,
+      marketId: item.marketId,
     },
   });
 }

@@ -10,10 +10,31 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DestroyMarket } from "@/lib/actions/market/destroy";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
-import { debounce } from "lodash";
+import { add, debounce } from "lodash";
 import { UpdateMarket } from "@/lib/actions/market/update";
+import { UpdateItem } from "@/lib/actions/item/update";
+import MarketsSelect from "./markets-select-group";
+import { IndexMarkets } from "@/lib/actions/market";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { DestroyItem } from "@/lib/actions/item/destroy";
+
+type Item = {
+  id: number;
+  name: string;
+  price: number;
+  defaultAmount: number;
+  tax: number;
+  marketId: number;
+  imageLink: string;
+};
 
 type Market = {
   id: number;
@@ -21,88 +42,167 @@ type Market = {
   province: string;
 };
 
-type AllMarketsProps = {
-  markets: Market[];
-  fetchMarkets: () => Promise<void>; // Add this line
+type AllItemsProps = {
+  items: Item[];
+  fetchItems: () => Promise<void>; // Add this line
 };
 
-export default function AllMarkets({ markets, fetchMarkets }: AllMarketsProps) {
-  async function handleDestroy(market: Market) {
-    await DestroyMarket(market);
-    fetchMarkets(); // Update the markets after a market is deleted
+export default function AllItems({ items, fetchItems }: AllItemsProps) {
+  async function handleDestroy(item: Item) {
+    await DestroyItem(item);
+    fetchItems(); // Update the markets after a market is deleted
   }
 
-  const [marketState, setMarketState] = useState(markets);
+  const [itemState, setItemState] = useState(items);
+  const [markets, setMarkets] = useState<Market[]>([]);
+
+  useEffect(() => {
+    IndexMarkets().then(setMarkets);
+  }, []);
 
   // Add this useEffect hook
   useEffect(() => {
-    setMarketState(markets);
-  }, [markets]);
+    setItemState(items);
+  }, [items]);
 
   const handleInputChange = (id: number, field: string, value: string) => {
-    const newMarketState = marketState.map((market) => {
-      if (market.id === id) {
-        return { ...market, [field]: value };
+    const newItemState = itemState.map((item) => {
+      if (item.id === id) {
+        // Handle top-level properties
+        return { ...item, [field]: value };
       }
-      return market;
+      return item;
     });
-    setMarketState(newMarketState);
-    
-    const market = newMarketState.find((market) => market.id === id);
-    if (market) {
-      debouncedUpdate(market.id, market.name, market.province);
+    setItemState(newItemState);
+
+    const item = newItemState.find((item) => item.id === id);
+    if (item) {
+      item.imageLink = item.imageLink || "";
+      item.price = Number(item.price);
+      item.defaultAmount = Number(item.defaultAmount);
+      item.tax = Number(item.tax);
+      item.marketId = Number(item.marketId);
+
+      debouncedUpdate(
+        item.id,
+        item.name,
+        item.price,
+        item.defaultAmount,
+        item.tax,
+        item.marketId,
+        item.imageLink
+      );
     }
   };
 
   const debouncedUpdate = debounce(
-    (id: number, newName: string, newProvince: string) => {
-      // Do something with the new name
-      UpdateMarket({ id, name: newName, province: newProvince });
+    (
+      id: number,
+      newName: string,
+      newPrice: number,
+      newDefaultAmount: number,
+      newTax: number,
+      newMarketId: number,
+      newImageLink: string
+    ) => {
+      UpdateItem({
+        id,
+        name: newName,
+        price: newPrice,
+        defaultAmount: newDefaultAmount,
+        tax: newTax,
+        marketId: newMarketId,
+        imageLink: newImageLink,
+      });
     },
     2000
   );
 
   return (
     <div className="flex flex-row">
-      <div className="flex flex-1 w-32"></div>
-      <div className="flex flex-auto w-64">
+      <div className="flex flex-1"></div>
+      <div className="flex flex-auto">
         <Table>
           <TableCaption>List of markets</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-center">Market name</TableHead>
-              <TableHead className="text-center">Province</TableHead>
-              <TableHead className="text-center">Remove market</TableHead>
+              <TableHead className="text-center">Item name</TableHead>
+              <TableHead className="text-center">Price</TableHead>
+              <TableHead className="text-center">Default Amount</TableHead>
+              <TableHead className="text-center">Tax</TableHead>
+              <TableHead className="text-center">Market</TableHead>
+              <TableHead className="text-center">Remove item</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {marketState.map((market) => (
-              <TableRow key={market.id}>
+            {itemState.map((item) => (
+              <TableRow key={item.id}>
                 <TableCell>
                   <Input
                     type="text"
-                    value={market.name}
+                    value={item.name}
                     onChange={(e) =>
-                      handleInputChange(market.id, "name", e.target.value)
+                      handleInputChange(item.id, "name", e.target.value)
                     }
                   />
                 </TableCell>
                 <TableCell>
                   <Input
-                    type="text"
-                    value={market.province}
+                    type="number"
+                    value={item.price}
                     onChange={(e) =>
-                      handleInputChange(market.id, "province", e.target.value)
+                      handleInputChange(item.id, "price", e.target.value)
                     }
                   />
                 </TableCell>
-                <TableCell className="flex justify-center"><IoCloseSharp  className="text-white hover:text-red-600 items-center hover:cursor-pointer text-2xl text-center" onClick={() => handleDestroy(market)} /></TableCell>
+                <TableCell>
+                  <Input
+                    type="number"
+                    value={item.defaultAmount}
+                    onChange={(e) =>
+                      handleInputChange(
+                        item.id,
+                        "defaultAmount",
+                        e.target.value
+                      )
+                    }
+                  />
+                </TableCell>
+                <TableCell>
+                  <Input
+                    type="number"
+                    value={item.tax}
+                    onChange={(e) =>
+                      handleInputChange(item.id, "tax", e.target.value)
+                    }
+                  />
+                </TableCell>
+                <TableCell>
+                  <Select
+                  onValueChange={(value) =>
+                    {handleInputChange(item.id, "marketId", value)}}
+                  defaultValue={item.marketId}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Theme" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <MarketsSelect markets={markets} />
+                    </SelectContent>
+                  </Select>
+                </TableCell>
+                <TableCell className="flex justify-center">
+                  <IoCloseSharp
+                    className="text-white hover:text-red-600 items-center hover:cursor-pointer text-2xl text-center"
+                    onClick={() => handleDestroy(item)}
+                  />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
-      <div className="flex flex-1 w-32"></div>
+      <div className="flex flex-1"></div>
     </div>
   );
 }

@@ -4,20 +4,28 @@
 import prisma from "@/prisma/client";
 
 // type of market
-type Market = {
+type Item = {
   id: number;
   name: string;
-  province: string;
+  price: number;
+  defaultAmount: number;
+  tax: number;
+  marketId: number;
+  imageLink: string;
 };
 
-export async function UpdateMarket(market: Market) {
-  await prisma.market.update({
+export async function UpdateItem(item: Item) {
+  await prisma.item.update({
     where: {
-      id: market.id,
+      id: item.id,
     },
     data: {
-      name: market.name,
-      province: market.province,
+      name: item.name,
+      price: item.price,
+      defaultAmount: item.defaultAmount,
+      tax: item.tax,
+      marketId: item.marketId,
+      imageLink: item.imageLink,
     },
   });
 }

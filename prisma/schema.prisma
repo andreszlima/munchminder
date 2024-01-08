@@ -19,7 +19,7 @@ model Item {
   market      Market   @relation(fields: [marketId], references: [id])
   marketId    Int
   listitem    ListItem[]
-  imageLink   String?
+  imageLink   String   @default("")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt @default(now())
 }

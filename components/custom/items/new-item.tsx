@@ -29,12 +29,13 @@ import MarketsSelect from "./markets-select-group";
 
 // type of item
 type Item = {
+  id: number;
   name: string;
   price: number;
   defaultAmount: number;
   tax: number;
-  marketId: string;
-  imageLink?: string;
+  marketId: number | string;
+  imageLink: string;
 };
 
 type Market = {
@@ -48,6 +49,7 @@ type NewItemProps = {
 };
 
 const formSchema = z.object({
+  id: z.number().optional(),
   name: z.string().min(2, {
     message: "Item name must be at least 2 characters.",
   }),
@@ -63,7 +65,7 @@ const formSchema = z.object({
     .string()
     .transform(parseFloat)
     .refine((value) => !isNaN(value), {
-      message: "You need to choose a market",
+      message: "Price must be a number.",
     }),
   imageLink: z.string().optional(),
 });
@@ -83,6 +85,7 @@ export default function NewItem({ action }: NewItemProps) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      id: 0,
       name: "",
       price: 0,
       defaultAmount: 1,
@@ -95,6 +98,7 @@ export default function NewItem({ action }: NewItemProps) {
   const onSubmit = async (data: Item) => {
     data.price = Number(data.price);
     data.defaultAmount = Number(data.defaultAmount);
+    data.marketId = Number(data.marketId);
     await action(data);
     form.reset();
     // Reset the marketId to the default value
@@ -133,9 +137,7 @@ export default function NewItem({ action }: NewItemProps) {
                 <FormControl>
                   <Input type="number" {...field} />
                 </FormControl>
-                <FormDescription>
-                  Price of the item/package
-                </FormDescription>
+                <FormDescription>Price of the item/package</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -170,9 +172,7 @@ export default function NewItem({ action }: NewItemProps) {
                 <FormControl>
                   <Input type="number" {...field} />
                 </FormControl>
-                <FormDescription>
-                  This is the tax percentage
-                </FormDescription>
+                <FormDescription>This is the tax percentage</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -184,22 +184,31 @@ export default function NewItem({ action }: NewItemProps) {
             name="marketId"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>Market</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select market" />
+                      <SelectValue placeholder="Select a market" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <MarketsSelect markets={markets} />
+                    {
+                      markets.map((market) => (
+                        <SelectItem
+                          key={market.id}
+                          value={market.id.toString()}
+                        >
+                          {market.name}
+                        </SelectItem>
+                      ))
+                    }
                   </SelectContent>
                 </Select>
                 <FormDescription>
-                  Select the market where the item is sold
+                  Select the market this item belongs to
                 </FormDescription>
                 <FormMessage />
               </FormItem>

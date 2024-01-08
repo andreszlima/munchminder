@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CreateMarket } from "@/lib/actions/market/create";
 import { IndexMarkets } from "@/lib/actions/market";
 import NewMarket from "@/components/custom/market/new-market";
@@ -9,10 +9,8 @@ import AllMarkets from "@/components/custom/market/all-markets";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+  CardDescription, CardHeader,
+  CardTitle
 } from "@/components/ui/card";
 
 type Market = {

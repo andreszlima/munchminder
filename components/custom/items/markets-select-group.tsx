@@ -1,25 +1,41 @@
-import { SelectContent, SelectGroup, SelectItem } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { IndexMarkets } from "@/lib/actions/market";
 import React, { useEffect, useState } from "react";
 
-export default function MarketsSelect({markets, fetchMarkets, onMarketSelect}: any) {
+export default function MarketsSelect({
+  markets,
+  fetchMarkets,
+  onMarketSelect,
+}: any) {
+  const [marketState, setMarketState] = useState(markets);
+  useEffect(() => {
+    setMarketState(markets);
+  }, [markets]);
 
-    const [marketState, setMarketState] = useState(markets);
+  const handleMarketSelect = (marketId: number) => {
+    onMarketSelect(marketId);
+  };
 
-    const handleMarketSelect = (marketId: number) => {
-        onMarketSelect(marketId);
-      };
-
-    useEffect(() => {
-        setMarketState(markets);
-      }, [markets]);
+  
 
   return (
-        <>
-            {
-                marketState.map((market: any) => {
-                    return <SelectItem key={market.id} value={String(market.id)}>{market.name.toString()}</SelectItem>
-                })
-            }
-        </>
+    <>
+      {marketState.map((market: any) => (
+        <SelectItem
+          key={market.id}
+          value={market.id}
+          onSelect={() => handleMarketSelect(market.id)}
+        >
+          {market.name}
+        </SelectItem>
+      ))}
+    </>
   );
 }

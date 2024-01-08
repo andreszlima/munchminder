@@ -4,14 +4,14 @@
 import prisma from "@/prisma/client";
 
 // type of market
-type Market = {
+type Item = {
   id: number
 };
 
-export async function DestroyMarket(market: Market) {
-  await prisma.market.delete({
+export async function DestroyItem(item: Item) {
+  await prisma.item.delete({
     where: {
-      id: market.id,
+      id: item.id,
     },
   });
 }
