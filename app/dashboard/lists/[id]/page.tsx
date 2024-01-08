@@ -8,7 +8,7 @@ export default function ListPage() {
   // Route -> /shop/[tag]/[item]
   // URL -> /shop/shoes/nike-air-max-97
   // `params` -> { tag: 'shoes', item: 'nike-air-max-97' }
-  console.log(params);
+  // console.log(params);
 
   return (<>
     <h1>List Page</h1>

@@ -1,29 +1,58 @@
 "use client";
 
-import NewList from '@/components/custom/lists/new-list'
-import UserId from '@/components/custom/user-id';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { CreateList } from '@/lib/actions/list/create';
-import { currentUser, useUser } from '@clerk/nextjs';
-import React from 'react'
+import MyLists from "@/components/custom/lists/my-lists";
+import NewList from "@/components/custom/lists/new-list";
+import UserId from "@/components/custom/user-id";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { IndexLists } from "@/lib/actions/list";
+import { CreateList } from "@/lib/actions/list/create";
+import { IndexMarkets } from "@/lib/actions/market";
+import { currentUser, useUser } from "@clerk/nextjs";
+import React, { useEffect, useState } from "react";
 
 type List = {
+  id: number;
+  name: string;
+  userId: string;
+};
+
+type NewList = {
   name: string;
   userId: string;
 };
 
 function ListsPage() {
-
   const { isSignedIn, user, isLoaded } = useUser();
 
-
-  const handleCreateList = async (list: List) => {
+  const handleCreateList = async (list: NewList) => {
     if (user) {
-    list.userId = user.id
+      list.userId = user.id;
     }
     await CreateList(list);
-  }
-  
+    fetchLists();
+  };
+
+  const [lists, setLists] = useState<List[]>([]);
+
+  const fetchLists = async () => {
+    if (isLoaded && user) {
+    const data = await IndexLists(user.id);
+    setLists(data);
+    }
+  };
+
+  useEffect(() => {
+    if (isLoaded) {
+      fetchLists();
+    }
+  }, [isLoaded]);
+
   return (
     <div>
       <div className="flex justify-center p-8">
@@ -39,8 +68,11 @@ function ListsPage() {
           </CardContent>
         </Card>
       </div>
+      <div className="p-8">
+        <MyLists lists={lists} getUpdatedLists={fetchLists} />
+      </div>
     </div>
-  )
+  );
 }
 
-export default ListsPage
+export default ListsPage;
