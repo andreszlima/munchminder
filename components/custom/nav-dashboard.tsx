@@ -36,7 +36,7 @@ export default function NavDashboard() {
   const pathname = usePathname();
 
   return (
-    <div className="flex justify-between p-6 border border-white">
+    <div className="flex justify-between p-6 border border-white rounded-b-2xl">
       <Link href={"/dashboard"} className="items-center">Logo</Link>
       <div className="md:flex hidden items-center">
         <NavLinkDashboard reference="/dashboard/lists" text="Lists" />

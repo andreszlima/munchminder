@@ -59,7 +59,7 @@ function ItemsPage() {
 
   return (
     <div>
-      <div className="flex justify-center">
+      <div className="flex justify-center p-6">
         <Card>
           <CardHeader>
             <CardTitle>New item</CardTitle>
@@ -72,7 +72,7 @@ function ItemsPage() {
           </CardContent>
         </Card>
       </div>
-      <div className="p-8">
+      <div className="p-6">
         <AllItems items={items} fetchItems={fetchItems} />
       </div>
     </div>
