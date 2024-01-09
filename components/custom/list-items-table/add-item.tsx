@@ -102,7 +102,7 @@ export default function AddItemToList({
   };
 
   function onError(errors: any) {
-    console.log(errors);
+    // console.log(errors);
   }
 
   let selectedItem;

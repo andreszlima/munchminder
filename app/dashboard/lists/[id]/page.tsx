@@ -19,6 +19,9 @@ type ListItem = {
   item: {
     name: string;
     price: number;
+    market: {
+      name: string;
+    };
   };
 };
 
@@ -66,9 +69,6 @@ export default function ListsPage() {
         <Card>
           <CardHeader className="items-center">
             <CardTitle>New item</CardTitle>
-            <CardDescription>
-              Add a new market to have items assigned to
-            </CardDescription>
           </CardHeader>
           <CardContent>
             <AddItem action={handleAddItem} listId={parseInt(params.id)} />

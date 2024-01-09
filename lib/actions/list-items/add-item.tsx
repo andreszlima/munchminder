@@ -6,6 +6,7 @@ type ListItem = {
   itemId: number;
   listId: number;
   amount: number;
+  selected: boolean;
   newPrice?: number;
 };
 
@@ -15,6 +16,7 @@ export async function AddItemToList(formData: ListItem) {
       listId: formData.listId,
       itemId: formData.itemId,
       amount: formData.amount,
+      selected: false,
       newPrice: formData.newPrice,
     },
   });
