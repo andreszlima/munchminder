@@ -1,17 +1,81 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import AddItem from "@/components/custom/list-items-table/add-item";
+import FullTable from "@/components/custom/list-items-table/full-table";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { AddItemToList } from "@/lib/actions/list-items/add-item";
+import { Authorize } from "@/lib/actions/list-items/authorize";
+import { ShowListItems } from "@/lib/actions/list-items/show-list";
+import { useUser } from "@clerk/nextjs";
+import { redirect, useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export default function ListPage() {
+type ListItem = {
+  id: number;
+  listId: number;
+  itemId: number;
+  amount: number;
+  newPrice: number | null;
+  item: {
+    name: string;
+    price: number;
+  };
+};
+
+type AddListItem = {
+  itemId: number;
+  listId: number;
+  amount: number;
+  newPrice?: number;
+};
+
+export default function ListsPage() {
   const params = useParams<{ id: string }>();
+  const router = useRouter();
+  const { isSignedIn, user, isLoaded } = useUser();
+  const [items, setItems] = useState<ListItem[]>();
 
-  // Route -> /shop/[tag]/[item]
-  // URL -> /shop/shoes/nike-air-max-97
-  // `params` -> { tag: 'shoes', item: 'nike-air-max-97' }
-  // console.log(params);
+  useEffect(() => {
+    if (isLoaded && user) {
+      Authorize({
+        listId: parseInt(params.id),
+        userId: user.id,
+      }).then((authorized) => {
+        if (!authorized) {
+          router.push("/dashboard/lists");
+        } else {
+          fetchListItems();
+        }
+      });
+    }
+  }, [params.id, router, isLoaded, user]);
 
-  return (<>
-    <h1>List Page</h1>
-    <p>Tag: {params.id}</p>
-  </>);
+  const fetchListItems = async () => {
+    const data = await ShowListItems(parseInt(params.id));
+    setItems(data);
+  };
+
+  const handleAddItem = async (formData: AddListItem) => {
+    await AddItemToList(formData);
+    fetchListItems();
+  }
+
+  return (
+    <>
+      <div className="flex justify-center p-6">
+        <Card>
+          <CardHeader className="items-center">
+            <CardTitle>New item</CardTitle>
+            <CardDescription>
+              Add a new market to have items assigned to
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <AddItem action={handleAddItem} listId={parseInt(params.id)} />
+          </CardContent>
+        </Card>
+      </div>
+      <FullTable items={items} fetchListItems={fetchListItems} />
+    </>
+  );
 }

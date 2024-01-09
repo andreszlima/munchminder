@@ -50,6 +50,7 @@ function ItemsPage() {
     };
 
     await CreateItem(item);
+    fetchItems();
 
   };
 

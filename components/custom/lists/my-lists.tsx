@@ -35,7 +35,7 @@ function MyLists({ lists, getUpdatedLists }: AllListProps) {
       <div className="flex flex-1 w-32"></div>
       <div className="flex flex-auto w-64">
         <Table>
-          <TableCaption>List of markets</TableCaption>
+          <TableCaption>List of lists</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead className="text-center">List name</TableHead>

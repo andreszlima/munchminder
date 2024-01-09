@@ -60,7 +60,12 @@ const formSchema = z.object({
       message: "Price must be a number.",
     }),
   defaultAmount: z.number(),
-  tax: z.number(),
+  tax: z
+    .string()
+    .transform(parseFloat)
+    .refine((value) => !isNaN(value), {
+      message: "Tax must be a number.",
+    }),
   marketId: z
     .string()
     .transform(parseFloat)
@@ -89,7 +94,7 @@ export default function NewItem({ action }: NewItemProps) {
       name: "",
       price: 0,
       defaultAmount: 1,
-      tax: 0,
+      tax: "0",
       marketId: "",
       imageLink: "",
     },
@@ -152,7 +157,11 @@ export default function NewItem({ action }: NewItemProps) {
               <FormItem>
                 <FormLabel>Default amount</FormLabel>
                 <FormControl>
-                  <Input type="number" {...field} />
+                  <Input
+                    type="number"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
                 </FormControl>
                 <FormDescription>
                   This is the default amount of items/packages
@@ -195,16 +204,11 @@ export default function NewItem({ action }: NewItemProps) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {
-                      markets.map((market) => (
-                        <SelectItem
-                          key={market.id}
-                          value={market.id.toString()}
-                        >
-                          {market.name}
-                        </SelectItem>
-                      ))
-                    }
+                    {markets.map((market) => (
+                      <SelectItem key={market.id} value={market.id.toString()}>
+                        {market.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormDescription>
