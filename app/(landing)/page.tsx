@@ -1,9 +1,34 @@
-import LandingNav from "@/components/custom/landing-nav";
+// import LandingNav from "@/components/custom/landing-nav";
 
-export default function Home() {
+// export default function Home() {
+//   return (
+//     <div>
+//       <LandingNav />
+//     </div>
+//   );
+// }
+
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useEffect } from "react"
+
+
+function DashboardPage() {
+
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push("/dashboard/lists")
+  })
+
   return (
     <div>
-      <LandingNav />
+      
     </div>
-  );
+  )
 }
+
+
+export default DashboardPage
+
