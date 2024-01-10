@@ -115,6 +115,11 @@ export default function AllItems({ items, fetchItems }: AllItemsProps) {
     2000
   );
 
+  const getMarketName = (marketId: number) => {
+    const item = items.find((item) => item.marketId === marketId);
+    return item ? item.id : items[0];
+  }
+
   return (
     <div className="flex flex-row">
       <div className="flex flex-1"></div>

@@ -30,7 +30,7 @@ export default function MarketsSelect({
       {marketState.map((market: any) => (
         <SelectItem
           key={market.id}
-          value={market.id}
+          value={market.id.toString()}
           onSelect={() => handleMarketSelect(market.id)}
         >
           {market.name}

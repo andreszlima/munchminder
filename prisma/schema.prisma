@@ -16,7 +16,7 @@ model Item {
   price       Float
   defaultAmount Float  @default(1)
   tax         Float    @default(0)
-  market      Market   @relation(fields: [marketId], references: [id])
+  market      Market   @relation(fields: [marketId], references: [id], onDelete: Cascade)
   marketId    Int
   listitem    ListItem[]
   imageLink   String   @default("")
@@ -45,8 +45,8 @@ model List {
 
 model ListItem {
   id          Int      @id @default(autoincrement())
-  list        List     @relation(fields: [listId], references: [id])
-  item        Item     @relation(fields: [itemId], references: [id])
+  list        List     @relation(fields: [listId], references: [id], onDelete: Cascade)
+  item        Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
   amount      Float    @default(1)
   selected    Boolean  @default(false)
   newPrice    Float
