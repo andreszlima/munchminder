@@ -2,6 +2,7 @@
 "use server";
 
 import prisma from "@/prisma/client";
+import lodash from "lodash";
 
 export async function IndexItems() {
     const items = await prisma.item.findMany({
@@ -19,9 +20,9 @@ export async function IndexItems() {
             },
             imageLink: true,
         },
-        orderBy: {
-            id: "desc",
-        },
     });
-    return items;
+
+    const orderedItems = lodash.sortBy(items, ["market.name", "name"], ["asc", "asc"])
+
+    return orderedItems;
 }

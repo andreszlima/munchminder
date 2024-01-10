@@ -15,7 +15,8 @@ type ListItem = {
   listId: number;
   itemId: number;
   amount: number;
-  newPrice: number | null;
+  newPrice: number;
+  selected: boolean;
   item: {
     name: string;
     price: number;
@@ -29,7 +30,8 @@ type AddListItem = {
   itemId: number;
   listId: number;
   amount: number;
-  newPrice?: number;
+  newPrice: number;
+  selected: boolean;
 };
 
 export default function ListsPage() {
@@ -51,7 +53,7 @@ export default function ListsPage() {
         }
       });
     }
-  }, [params.id, router, isLoaded, user]);
+  });
 
   const fetchListItems = async () => {
     const data = await ShowListItems(parseInt(params.id));

@@ -131,7 +131,7 @@ export default function AddItemToList({
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a verified email to display" />
+                      <SelectValue placeholder="Select an item" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent className="overflow-y-auto max-h-[15rem]">

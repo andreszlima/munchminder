@@ -31,6 +31,10 @@ export async function ShowListItems(listId: number) {
     },
   });
 
+  listItems.forEach((listItem) => {
+    listItem.newPrice = listItem.newPrice || 0;
+  } );
+
   const newlistitems = lodash.sortBy(listItems, ["item.market.name","item.name"], ["asc","asc"]);
 
   return newlistitems;

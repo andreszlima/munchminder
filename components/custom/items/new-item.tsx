@@ -34,7 +34,7 @@ type Item = {
   price: number;
   defaultAmount: number;
   tax: number;
-  marketId: number | string;
+  marketId: number;
   imageLink: string;
 };
 
@@ -61,11 +61,7 @@ const formSchema = z.object({
     }),
   defaultAmount: z.number(),
   tax: z
-    .string()
-    .transform(parseFloat)
-    .refine((value) => !isNaN(value), {
-      message: "Tax must be a number.",
-    }),
+    .number(),
   marketId: z
     .string()
     .transform(parseFloat)
@@ -94,8 +90,8 @@ export default function NewItem({ action }: NewItemProps) {
       name: "",
       price: 0,
       defaultAmount: 1,
-      tax: "0",
-      marketId: "",
+      tax: 0,
+      marketId: markets[0]?.id,
       imageLink: "",
     },
   });
@@ -104,10 +100,11 @@ export default function NewItem({ action }: NewItemProps) {
     data.price = Number(data.price);
     data.defaultAmount = Number(data.defaultAmount);
     data.marketId = Number(data.marketId);
+    data.tax = Number(data.tax);
     await action(data);
     form.reset();
     // Reset the marketId to the default value
-    form.setValue("marketId", data.marketId.toString());
+    form.setValue("marketId", data.marketId);
   };
 
   return (
@@ -196,7 +193,7 @@ export default function NewItem({ action }: NewItemProps) {
                 <FormLabel>Market</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  defaultValue={field.value ? field.value.toString() : ""}
                 >
                   <FormControl>
                     <SelectTrigger>

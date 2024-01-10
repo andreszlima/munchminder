@@ -21,7 +21,7 @@ type ListItem = {
   listId: number;
   itemId: number;
   amount: number;
-  newPrice: number | null;
+  newPrice: number;
   selected: boolean;
   item: {
     name: string;
@@ -33,7 +33,7 @@ type ListItem = {
 };
 
 type AllProps = {
-  items: ListItem[];
+  items: ListItem[] | undefined;
   fetchListItems: () => void;
 };
 
@@ -71,61 +71,89 @@ export default function FullTable({ items, fetchListItems }: AllProps) {
   }
 
   return (
-    <Table>
-      <TableCaption>
-        <div>
-          <div>Total price: ${sum}</div>
-          {
-            // @ts-ignore
-            summed?.map((item) => (
-              <div key={item.market}>
-                {item.market}: Total: ${item.totalprice.toFixed(2)} Checked: $
-                {item.checkedTotal.toFixed(2)}
-              </div>
-            ))
-          }
-        </div>
-      </TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="text-center">Market</TableHead>
-          <TableHead className="text-center">Added to cart</TableHead>
-          <TableHead className="text-center">Item</TableHead>
-          <TableHead className="text-center">Amount</TableHead>
-          <TableHead className="text-center">Price</TableHead>
-          <TableHead className="text-center">Remove item</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {items?.map((item) => (
-          <TableRow key={item.id} className="">
-            <TableCell>{item.item.market.name}</TableCell>
-            <TableCell className="">
-              <Checkbox
-                defaultChecked={item.selected}
-                className="flex"
-                id={item.id.toString()}
-                onCheckedChange={(a) => {
-                  const checked: TypeChecked = {
-                    id: item.id,
-                    selected: a as boolean,
-                  };
-                  updateSelected(checked);
-                }}
-              />
-            </TableCell>
-            <TableCell>{item.item.name}</TableCell>
-            <TableCell>{item.amount}</TableCell>
-            <TableCell>{item.item.price}</TableCell>
-            <TableCell className="flex justify-center">
-              <IoCloseSharp
-                className="text-white hover:text-red-600 items-center hover:cursor-pointer text-2xl text-center"
-                onClick={() => handleDestroy(item)}
-              />
-            </TableCell>
+    <>
+      <div className="flex flex-col items-center justify-center">
+        <div>Total price: ${sum}</div>
+        {
+          // @ts-ignore
+          summed?.map((item) => (
+            <div key={item.market} className="">
+              <span className="font-bold">{item.market}</span> - Total: $
+              {item.totalprice.toFixed(2)} | Checked: $
+              {item.checkedTotal.toFixed(2)}
+            </div>
+          ))
+        }
+      </div>
+      <Table>
+        <TableCaption className="p-3">
+          {/* <div>
+            <div>Total price: ${sum}</div>
+            {
+              // @ts-ignore
+              summed?.map((item) => (
+                <div key={item.market}>
+                  <span className="font-bold">{item.market}</span> - Total: $
+                  {item.totalprice.toFixed(2)} | Checked: $
+                  {item.checkedTotal.toFixed(2)}
+                </div>
+              ))
+            }
+          </div> */}
+        </TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="text-center">Market</TableHead>
+            <TableHead className="text-center">Chk</TableHead>
+            <TableHead className="text-center">Item</TableHead>
+            <TableHead className="text-center">Qty</TableHead>
+            <TableHead className="text-center">Price</TableHead>
+            <TableHead className="text-center">Remove</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {items?.map((item) => (
+            <TableRow
+              key={item.id}
+              onClick={() => {
+                const checked: TypeChecked = {
+                  id: item.id,
+                  selected: !item.selected,
+                };
+                updateSelected(checked);
+              }}
+            >
+              <TableCell>{item.item.market.name}</TableCell>
+              <TableCell className="">
+                <Checkbox
+                  checked={item.selected}
+                  className="flex"
+                  id={item.id.toString()}
+                  onCheckedChange={(a) => {
+                    const checked: TypeChecked = {
+                      id: item.id,
+                      selected: a as boolean,
+                    };
+                    updateSelected(checked);
+                  }}
+                />
+              </TableCell>
+              <TableCell>{item.item.name}</TableCell>
+              <TableCell>{item.amount}</TableCell>
+              <TableCell>{item.item.price}</TableCell>
+              <TableCell className="flex justify-center">
+                <IoCloseSharp
+                  className="text-white hover:text-red-600 items-center hover:cursor-pointer text-2xl text-center"
+                  onClick={(e: any) => {
+                    e.stopPropagation(); // Prevent the TableRow onClick event from firing
+                    handleDestroy(item);
+                  }}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </>
   );
 }

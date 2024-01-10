@@ -56,12 +56,9 @@ export default function AllItems({ items, fetchItems }: AllItemsProps) {
   const [itemState, setItemState] = useState(items);
   const [markets, setMarkets] = useState<Market[]>([]);
 
-  useEffect(() => {
-    IndexMarkets().then(setMarkets);
-  }, []);
-
   // Add this useEffect hook
   useEffect(() => {
+    IndexMarkets().then(setMarkets);
     setItemState(items);
   }, [items]);
 
@@ -111,7 +108,7 @@ export default function AllItems({ items, fetchItems }: AllItemsProps) {
         price: newPrice,
         defaultAmount: newDefaultAmount,
         tax: newTax,
-        marketId: newMarketId,
+        marketId: Number(newMarketId),
         imageLink: newImageLink,
       });
     },
@@ -179,9 +176,10 @@ export default function AllItems({ items, fetchItems }: AllItemsProps) {
                 </TableCell>
                 <TableCell>
                   <Select
-                  onValueChange={(value) =>
-                    {handleInputChange(item.id, "marketId", value)}}
-                  defaultValue={item.marketId}
+                    onValueChange={(value) => {
+                      handleInputChange(item.id, "marketId", value);
+                    }}
+                    defaultValue={item.marketId.toString()}
                   >
                     <SelectTrigger className="w-[180px]">
                       <SelectValue placeholder="Theme" />

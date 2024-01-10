@@ -42,8 +42,8 @@ function ListsPage() {
 
   const fetchLists = async () => {
     if (isLoaded && user) {
-    const data = await IndexLists(user.id);
-    setLists(data);
+      const data = await IndexLists(user.id);
+      setLists(data);
     }
   };
 
@@ -51,7 +51,7 @@ function ListsPage() {
     if (isLoaded) {
       fetchLists();
     }
-  }, [isLoaded]);
+  });
 
   return (
     <div>

@@ -31,7 +31,7 @@ type FormData = {
   price: number;
   defaultAmount: number;
   tax: number;
-  marketId: string;
+  marketId: number;
   imageLink: string;
 };
 

@@ -7,7 +7,7 @@ type ListItem = {
   listId: number;
   itemId: number;
   amount: number;
-  newPrice: number | null;
+  newPrice: number;
   item: {
     name: string;
     price: number;

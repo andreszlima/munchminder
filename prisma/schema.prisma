@@ -49,7 +49,7 @@ model ListItem {
   item        Item     @relation(fields: [itemId], references: [id])
   amount      Float    @default(1)
   selected    Boolean  @default(false)
-  newPrice    Float?
+  newPrice    Float
   listId      Int
   itemId      Int
   createdAt   DateTime @default(now())
