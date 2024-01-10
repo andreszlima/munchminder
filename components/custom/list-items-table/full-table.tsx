@@ -43,16 +43,17 @@ type TypeChecked = {
 };
 
 export default function FullTable({ items, fetchListItems }: AllProps) {
-  // Sum all item's prices
+  // Sum all item's newPrices
   const sum = items
-    ?.reduce((a, b) => a + b.item.price * b.amount, 0)
+    ?.map((item) => item.newPrice * item.amount)
+    .reduce((a, b) => a + b, 0)
     .toFixed(2);
 
   let summed = lodash(items)
     .groupBy("item.market.name")
     .map((objs, key) => ({
       market: key,
-      totalprice: lodash(objs).sumBy((o) => o.item.price * o.amount),
+      totalprice: lodash(objs).sumBy((o) => o.newPrice * o.amount),
       checkedTotal: lodash(objs)
         .filter("selected")
         .sumBy((o) => o.item.price * o.amount),
@@ -140,7 +141,7 @@ export default function FullTable({ items, fetchListItems }: AllProps) {
               </TableCell>
               <TableCell>{item.item.name}</TableCell>
               <TableCell>{item.amount}</TableCell>
-              <TableCell>{item.item.price}</TableCell>
+              <TableCell>{item.newPrice}</TableCell>
               <TableCell className="flex justify-center">
                 <IoCloseSharp
                   className="text-white hover:text-red-600 items-center hover:cursor-pointer text-2xl text-center"
