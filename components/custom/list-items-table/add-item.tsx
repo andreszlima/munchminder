@@ -3,6 +3,8 @@
 import { GetAllItems } from "@/lib/actions/list-items/get-items-to-list";
 import React, { useEffect, useState } from "react";
 
+import { Check, CheckIcon, ChevronsUpDown } from "lucide-react";
+
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -26,6 +28,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import { cn } from "@/lib/utils";
+import { CaretSortIcon } from "@radix-ui/react-icons";
+import { set } from "lodash";
 
 type ItemToList = {
   id: number;
@@ -70,6 +87,8 @@ export default function AddItemToList({
   listId: number;
 }) {
   const [items, setItems] = useState<ItemToList[]>([]);
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState(0);
 
   async function fetchItems() {
     const newItems = await GetAllItems();
@@ -115,42 +134,71 @@ export default function AddItemToList({
             control={form.control}
             name="id"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <Select
-                  onValueChange={(value) => {
-                    field.onChange(Number(value));
-                    selectedItem = items.find(
-                      (item) => item.id === Number(value)
-                    );
-                    if (selectedItem) {
-                      form.setValue("amount", selectedItem.defaultAmount);
-                      form.setValue("price", selectedItem.price);
-                    }
-                  }}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select an item" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent className="overflow-y-auto max-h-[15rem]">
-                    {items.map((item) => (
-                      <SelectItem key={item.id} value={item.id.toString()}>
-                        {item.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              <FormItem className="flex flex-col w-full">
+                <FormLabel>Item</FormLabel>
+                <Popover open={open} onOpenChange={setOpen}>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          "w-full justify-between",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value
+                          ? items.find(
+                              (item) => item.id === field.value
+                            )?.name
+                          : "Select item"}
+                        <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-full overflow-auto max-h-[15rem]">
+                    <Command>
+                      <CommandInput
+                        placeholder="Search item..."
+                        className="h-9"
+                      />
+                      <CommandEmpty>No item found.</CommandEmpty>
+                      <CommandGroup>
+                        {items.map((item) => (
+                          <CommandItem
+                            value={item.name}
+                            key={item.id}
+                            onSelect={() => {
+                              form.setValue("id", item.id);
+                              setOpen(false);
+                              form.setValue("amount", item.defaultAmount);
+                              form.setValue("price", item.price);
+                            }}
+                          >
+                            {item.name}
+                            <CheckIcon
+                              className={cn(
+                                "ml-auto h-4 w-4",
+                                item.id === field.value
+                                  ? "opacity-0"
+                                  : "opacity-0"
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
                 <FormDescription>
-                  You can manage email addresses in your{" "}
-                  <Link href="/examples/forms">email settings</Link>.
+                  Select an item
                 </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
+
         <div className="p-2">
           <FormField
             control={form.control}
@@ -193,7 +241,9 @@ export default function AddItemToList({
             )}
           />
         </div>
-        <Button className="p-2 w-full" type="submit">Add item</Button>
+        <Button className="p-2 w-full" type="submit">
+          Add item
+        </Button>
       </form>
     </Form>
   );
