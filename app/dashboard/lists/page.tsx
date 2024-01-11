@@ -14,7 +14,7 @@ import { IndexLists } from "@/lib/actions/list";
 import { CreateList } from "@/lib/actions/list/create";
 import { IndexMarkets } from "@/lib/actions/market";
 import { currentUser, useUser } from "@clerk/nextjs";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 type List = {
   id: number;
@@ -40,18 +40,18 @@ function ListsPage() {
 
   const [lists, setLists] = useState<List[]>([]);
 
-  const fetchLists = async () => {
+  const fetchLists = useCallback(async () => {
     if (isLoaded && user) {
       const data = await IndexLists(user.id);
       setLists(data);
     }
-  };
+  }, [isLoaded, user]);
 
   useEffect(() => {
     if (isLoaded) {
       fetchLists();
     }
-  });
+  }, [fetchLists, isLoaded]);
 
   return (
     <div>

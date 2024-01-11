@@ -38,6 +38,7 @@ model List {
   name        String @default("Shopping list")
   userId      String
   split       Boolean  @default(false)
+  openList    Boolean  @default(false)
   listitem    ListItem[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt @default(now())

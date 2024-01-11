@@ -160,7 +160,7 @@ export default function AddItemToList({
                         placeholder="Search item..."
                         className="h-9"
                       />
-                      <CommandEmpty>No item found.</CommandEmpty>
+                      <CommandEmpty><a href={"/dashboard/items"}>Not found.<br/> Click here to create the item first</a></CommandEmpty>
                       <CommandGroup>
                         {items.map((item) => (
                           <CommandItem

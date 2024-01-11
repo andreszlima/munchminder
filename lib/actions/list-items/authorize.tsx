@@ -15,7 +15,8 @@ export async function Authorize({
     },
     select: {
       userId: true,
+      openList: true,
     },
   });
-  return authorize?.userId === userId
+  return authorize?.userId === userId || authorize?.openList === true;
 }

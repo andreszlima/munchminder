@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -53,26 +53,16 @@ const formSchema = z.object({
   name: z.string().min(2, {
     message: "Item name must be at least 2 characters.",
   }),
-  price: z
-    .string()
-    .transform(parseFloat)
-    .refine((value) => !isNaN(value), {
-      message: "Price must be a number.",
-    }),
-  defaultAmount: z.number(),
-  tax: z
-    .number(),
-  marketId: z
-    .string()
-    .transform(parseFloat)
-    .refine((value) => !isNaN(value), {
-      message: "Price must be a number.",
-    }),
+  price: z.coerce.number(),
+  defaultAmount: z.coerce.number(),
+  tax: z.coerce.number(),
+  marketId: z.coerce.number(),
   imageLink: z.string().optional(),
 });
 
 export default function NewItem({ action }: NewItemProps) {
   const [markets, setMarkets] = useState<Market[]>([]);
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
 
   async function fetchMarkets() {
     const markets = await IndexMarkets();
@@ -137,7 +127,20 @@ export default function NewItem({ action }: NewItemProps) {
               <FormItem>
                 <FormLabel>Price</FormLabel>
                 <FormControl>
-                  <Input type="number" {...field} />
+                  <Input
+                    type="number"
+                    {...field}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        event.preventDefault();
+                        // TypeScript might complain about this line because it thinks
+                        // event.target could be an element that doesn't have the blur method.
+                        // You can assure TypeScript that event.target is an input element like this:
+                        (event.target as HTMLInputElement).blur();
+                        submitButtonRef.current?.click();
+                      }
+                    }}
+                  />
                 </FormControl>
                 <FormDescription>Price of the item/package</FormDescription>
                 <FormMessage />
@@ -158,6 +161,16 @@ export default function NewItem({ action }: NewItemProps) {
                     type="number"
                     {...field}
                     onChange={(e) => field.onChange(Number(e.target.value))}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        event.preventDefault();
+                        // TypeScript might complain about this line because it thinks
+                        // event.target could be an element that doesn't have the blur method.
+                        // You can assure TypeScript that event.target is an input element like this:
+                        (event.target as HTMLInputElement).blur();
+                        submitButtonRef.current?.click();
+                      }
+                    }}
                   />
                 </FormControl>
                 <FormDescription>
@@ -176,7 +189,20 @@ export default function NewItem({ action }: NewItemProps) {
               <FormItem>
                 <FormLabel>Tax percentage</FormLabel>
                 <FormControl>
-                  <Input type="number" {...field} />
+                  <Input
+                    type="number"
+                    {...field}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        event.preventDefault();
+                        // TypeScript might complain about this line because it thinks
+                        // event.target could be an element that doesn't have the blur method.
+                        // You can assure TypeScript that event.target is an input element like this:
+                        (event.target as HTMLInputElement).blur();
+                        submitButtonRef.current?.click();
+                      }
+                    }}
+                  />
                 </FormControl>
                 <FormDescription>This is the tax percentage</FormDescription>
                 <FormMessage />
@@ -217,7 +243,9 @@ export default function NewItem({ action }: NewItemProps) {
           />
         </div>
         <div className="p-3 flex items-center justify-center">
-          <Button type="submit">Add item</Button>
+          <Button ref={submitButtonRef} type="submit">
+            Add item
+          </Button>
         </div>
       </form>
     </Form>
