@@ -60,9 +60,9 @@ type ItemToList = {
 
 const FormSchema = z.object({
   id: z.number(),
-  amount: z.number(),
+  amount: z.coerce.number().positive().optional(),
   name: z.string().optional(),
-  price: z.number().optional(),
+  price: z.coerce.number().positive().optional(),
   defaultAmount: z.number().optional(),
   tax: z.number().optional(),
   marketId: z.number().optional(),
@@ -114,7 +114,7 @@ export default function AddItemToList({
     const newItem = {
       listId: listId,
       itemId: data.id,
-      amount: data.amount,
+      amount: Number(data.amount),
       newPrice: data.price,
     };
     await action(newItem);
@@ -148,9 +148,7 @@ export default function AddItemToList({
                         )}
                       >
                         {field.value
-                          ? items.find(
-                              (item) => item.id === field.value
-                            )?.name
+                          ? items.find((item) => item.id === field.value)?.name
                           : "Select item"}
                         <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
@@ -190,9 +188,7 @@ export default function AddItemToList({
                     </Command>
                   </PopoverContent>
                 </Popover>
-                <FormDescription>
-                  Select an item
-                </FormDescription>
+                <FormDescription>Select an item</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -209,7 +205,10 @@ export default function AddItemToList({
                 <FormControl>
                   <Input
                     {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    onChange={(e) => {
+                      return field.onChange(e.target.value);
+                    }}
+                    step="any"
                   />
                 </FormControl>
                 <FormDescription>
@@ -230,7 +229,7 @@ export default function AddItemToList({
                 <FormControl>
                   <Input
                     {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    onChange={(e) => field.onChange(e.target.value)}
                   />
                 </FormControl>
                 <FormDescription>
