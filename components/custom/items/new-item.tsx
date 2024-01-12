@@ -81,7 +81,7 @@ export default function NewItem({ action }: NewItemProps) {
       price: 0,
       defaultAmount: 1,
       tax: 0,
-      marketId: markets[0]?.id,
+      marketId: 1,
       imageLink: "",
     },
   });

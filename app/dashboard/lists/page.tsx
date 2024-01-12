@@ -2,7 +2,6 @@
 
 import MyLists from "@/components/custom/lists/my-lists";
 import NewList from "@/components/custom/lists/new-list";
-import UserId from "@/components/custom/user-id";
 import {
   Card,
   CardContent,
@@ -12,9 +11,8 @@ import {
 } from "@/components/ui/card";
 import { IndexLists } from "@/lib/actions/list";
 import { CreateList } from "@/lib/actions/list/create";
-import { IndexMarkets } from "@/lib/actions/market";
-import { currentUser, useUser } from "@clerk/nextjs";
-import React, { useCallback, useEffect, useState } from "react";
+import { useUser } from "@clerk/nextjs";
+import { useCallback, useEffect, useState } from "react";
 
 type List = {
   id: number;

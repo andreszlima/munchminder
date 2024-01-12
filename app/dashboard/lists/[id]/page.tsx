@@ -4,17 +4,15 @@ import AddItem from "@/components/custom/list-items-table/add-item";
 import FullTable from "@/components/custom/list-items-table/full-table";
 import {
   Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+  CardContent, CardHeader,
+  CardTitle
 } from "@/components/ui/card";
 import { AddItemToList } from "@/lib/actions/list-items/add-item";
 import { Authorize } from "@/lib/actions/list-items/authorize";
 import { ShowListItems } from "@/lib/actions/list-items/show-list";
 import { GetListName } from "@/lib/actions/list/get-list-name";
 import { useUser } from "@clerk/nextjs";
-import { redirect, useParams, useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 type ListItem = {

@@ -1,5 +1,4 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -12,9 +11,7 @@ import {
 import { DestroyListItem } from "@/lib/actions/list-items/destroy";
 import { UpdateChecked } from "@/lib/actions/list-items/updateChecked";
 import lodash from "lodash";
-import React from "react";
 import { IoCloseSharp } from "react-icons/io5";
-import { boolean } from "zod";
 
 type ListItem = {
   id: number;
@@ -56,7 +53,7 @@ export default function FullTable({ items, fetchListItems }: AllProps) {
       totalprice: lodash(objs).sumBy((o) => o.newPrice * o.amount),
       checkedTotal: lodash(objs)
         .filter("selected")
-        .sumBy((o) => o.item.price * o.amount),
+        .sumBy((o) => o.newPrice * o.amount),
     }))
     .value();
 
