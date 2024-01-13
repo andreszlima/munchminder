@@ -23,6 +23,11 @@ export async function IndexItems(page: number, pageSize: number) {
       },
       imageLink: true,
     },
+    orderBy: {
+      market: {
+        name: "asc",
+      },
+    },
     skip: (page - 1) * pageSize,
     take: pageSize,
   });

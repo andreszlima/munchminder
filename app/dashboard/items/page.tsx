@@ -54,13 +54,9 @@ function ItemsPage() {
   const [items, setItems] = useState<Item[]>([]);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const searchParams = useSearchParams();
-
-  const pathname = usePathname();
-  const { replace } = useRouter();
 
   const fetchItems = async (page: number) => {
-    const { orderedItems, totalPages } = await IndexItems(page, 10);
+    const { orderedItems, totalPages } = await IndexItems(page, 8);
     setItems(orderedItems);
     setTotalPages(totalPages);
   };
@@ -79,15 +75,6 @@ function ItemsPage() {
     fetchItems(page);
   }, [page]);
 
-  function handleSearch(term: string) {
-    debouncedUpdate(term);
-  }
-
-  const debouncedUpdate = debounce( async (text: string) => {
-    const data = await SearchItems(text);
-    setItems(data);
-  }, 500);
-
   return (
     <div>
       <div className="flex justify-center p-6">
@@ -100,24 +87,6 @@ function ItemsPage() {
           </CardHeader>
           <CardContent>
             <NewItem action={handleCreateItem} />
-          </CardContent>
-        </Card>
-      </div>
-      <div className="flex justify-center p-1">
-        <Card>
-          <CardHeader>
-            <CardTitle>Search item</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <label htmlFor="search" className="sr-only">
-              Search item
-            </label>
-            <Input
-              placeholder={"Search item"}
-              onChange={(e) => {
-                handleSearch(e.target.value);
-              }}
-            />
           </CardContent>
         </Card>
       </div>

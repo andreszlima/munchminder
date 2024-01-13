@@ -47,7 +47,7 @@ export default function AllMarkets({ markets, fetchMarkets }: AllMarketsProps) {
       return market;
     });
     setMarketState(newMarketState);
-    
+
     const market = newMarketState.find((market) => market.id === id);
     if (market) {
       debouncedUpdate(market.id, market.name, market.province);
@@ -96,7 +96,14 @@ export default function AllMarkets({ markets, fetchMarkets }: AllMarketsProps) {
                     }
                   />
                 </TableCell>
-                <TableCell className="flex justify-center"><IoCloseSharp  className="text-white hover:text-red-600 items-center hover:cursor-pointer text-2xl text-center" onClick={() => handleDestroy(market)} /></TableCell>
+                <TableCell>
+                  <div className="flex justify-center">
+                    <IoCloseSharp
+                      className="hover:text-red-600 hover:cursor-pointer text-2xl"
+                      onClick={() => handleDestroy(market)}
+                    />
+                  </div>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
