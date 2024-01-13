@@ -140,13 +140,15 @@ export default function FullTable({ items, fetchListItems }: AllProps) {
               <TableCell>{item.amount}</TableCell>
               <TableCell>{item.newPrice}</TableCell>
               <TableCell className="flex justify-center">
-                <IoCloseSharp
-                  className="text-white hover:text-red-600 items-center hover:cursor-pointer text-2xl text-center"
-                  onClick={(e: any) => {
-                    e.stopPropagation(); // Prevent the TableRow onClick event from firing
-                    handleDestroy(item);
-                  }}
-                />
+                <div className="flex justify-center">
+                  <IoCloseSharp
+                    className="hover:text-red-600 hover:cursor-pointer text-2xl"
+                    onClick={(e: any) => {
+                      e.stopPropagation(); // Prevent the TableRow onClick event from firing
+                      handleDestroy(item);
+                    }}
+                  />
+                </div>
               </TableCell>
             </TableRow>
           ))}
