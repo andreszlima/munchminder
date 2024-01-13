@@ -199,41 +199,44 @@ export default function AllItems({
           </CardContent>
         </Card>
       </div>
+      <div className="p-4">
+        <div className="flex flex-rows text-muted-foreground justify-center">
+          <a
+            className="flex items-center gap-1 pl-2.5 px-2 hover:cursor-pointer"
+            onClick={(value) => {
+              if (page - 1 === 0) {
+                // alert("You are on the first page")
+              } else {
+                setPage(page - 1);
+              }
+            }}
+          >
+            <ChevronLeftIcon /> Previous
+          </a>
+          <span className="flex items-center gap-1 px-2">
+            <div className="bg-accent p-2.5">
+              {page}/{total}
+            </div>
+          </span>
+          <a
+            className="flex items-center gap-1 pr-2.5 px-2 hover:cursor-pointer"
+            onClick={() => {
+              if (page === total) {
+                // alert("You are on the last page")
+              } else {
+                setPage(page + 1);
+              }
+            }}
+          >
+            Next <ChevronRightIcon />
+          </a>
+        </div>
+      </div>
       <div className="flex flex-row">
         <div className="flex flex-1"></div>
         <div className="flex flex-auto">
           <Table>
-            <TableCaption>
-              <div className="flex flex-rows text-foreground justify-center">
-                <a
-                  className="flex items-center gap-1 pl-2.5 px-2 hover:cursor-pointer"
-                  onClick={(value) => {
-                    if (page - 1 === 0) {
-                      // alert("You are on the first page")
-                    } else {
-                      setPage(page - 1);
-                    }
-                  }}
-                >
-                  <ChevronLeftIcon /> Previous
-                </a>
-                <span className="flex items-center gap-1 px-2">
-                  <div className="bg-accent p-2.5">{page}/{total}</div>
-                </span>
-                <a
-                  className="flex items-center gap-1 pr-2.5 px-2 hover:cursor-pointer"
-                  onClick={() => {
-                    if (page === total) {
-                      // alert("You are on the last page")
-                    } else {
-                      setPage(page + 1);
-                    }
-                  }}
-                >
-                  Next <ChevronRightIcon />
-                </a>
-              </div>
-            </TableCaption>
+            <TableCaption>List of items</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead className="text-center">Item name</TableHead>

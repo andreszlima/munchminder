@@ -50,7 +50,7 @@ function MyLists({ lists, getUpdatedLists }: AllListProps) {
                     className="hover:text-blue-500"
                     href={`/dashboard/lists/${list.id}`}
                   >
-                    ✅ {list.name}
+                    📋 {list.name}
                   </Link>
                 </TableCell>
                 <TableCell>
