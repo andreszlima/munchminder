@@ -45,7 +45,7 @@ function MyLists({ lists, getUpdatedLists }: AllListProps) {
           <TableBody>
             {lists.map((list) => (
               <TableRow key={list.id}>
-                <TableCell>
+                <TableCell className="flex justify-center">
                   <Link
                     className="hover:text-blue-500"
                     href={`/dashboard/lists/${list.id}`}
