@@ -1,5 +1,9 @@
-type Item = {
+export type Item = {
+    id: number;
     name: string;
     price: number;
-    description: string;
-}
+    defaultAmount: number;
+    tax: number;
+    marketId: number;
+    imageLink: string;
+    };

@@ -4,25 +4,34 @@
 import prisma from "@/prisma/client";
 import lodash from "lodash";
 
-export async function IndexItems() {
-    const items = await prisma.item.findMany({
+export async function IndexItems(page: number, pageSize: number) {
+  const totalItems = await prisma.item.count();
+  const totalPages = Math.ceil(totalItems / pageSize);
+
+  const items = await prisma.item.findMany({
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      defaultAmount: true,
+      tax: true,
+      marketId: true,
+      market: {
         select: {
-            id: true,
-            name: true,
-            price: true,
-            defaultAmount: true,
-            tax: true,
-            marketId: true,
-            market: {
-                select: {
-                    name: true,
-                },
-            },
-            imageLink: true,
+          name: true,
         },
-    });
+      },
+      imageLink: true,
+    },
+    skip: (page - 1) * pageSize,
+    take: pageSize,
+  });
 
-    const orderedItems = lodash.sortBy(items, ["market.name", "name"], ["asc", "asc"])
+  const orderedItems = lodash.sortBy(
+    items,
+    ["market.name", "name"],
+    ["asc", "asc"]
+  );
 
-    return orderedItems;
+  return { orderedItems, totalPages };
 }

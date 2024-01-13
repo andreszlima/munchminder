@@ -59,7 +59,7 @@ export default function NewList({ action }: NewListProps) {
             </FormItem>
           )}
         />
-        <Button type="submit">Add list</Button>
+        <Button className='w-full' type="submit">Add list</Button>
       </form>
     </Form>
   )

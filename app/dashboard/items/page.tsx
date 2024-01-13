@@ -3,15 +3,30 @@
 import { useEffect, useState } from "react";
 
 import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
+
+import {
   Card,
   CardContent,
-  CardDescription, CardHeader,
-  CardTitle
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import NewItem from "@/components/custom/items/new-item";
 import { CreateItem } from "@/lib/actions/item/create";
 import { IndexItems } from "@/lib/actions/item";
 import AllItems from "@/components/custom/items/all-items";
+import { Input } from "@/components/ui/input";
+import { SearchItems } from "@/lib/actions/item/search-items";
+import { debounce } from "lodash";
 
 // type of item
 type Item = {
@@ -37,10 +52,17 @@ type FormData = {
 
 function ItemsPage() {
   const [items, setItems] = useState<Item[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const searchParams = useSearchParams();
 
-  const fetchItems = async () => {
-    const data = await IndexItems();
-    setItems(data);
+  const pathname = usePathname();
+  const { replace } = useRouter();
+
+  const fetchItems = async (page: number) => {
+    const { orderedItems, totalPages } = await IndexItems(page, 10);
+    setItems(orderedItems);
+    setTotalPages(totalPages);
   };
 
   const handleCreateItem = async (formData: FormData) => {
@@ -50,13 +72,21 @@ function ItemsPage() {
     };
 
     await CreateItem(item);
-    fetchItems();
-
+    fetchItems(page);
   };
 
   useEffect(() => {
-    fetchItems();
-  }, []);
+    fetchItems(page);
+  }, [page]);
+
+  function handleSearch(term: string) {
+    debouncedUpdate(term);
+  }
+
+  const debouncedUpdate = debounce( async (text: string) => {
+    const data = await SearchItems(text);
+    setItems(data);
+  }, 500);
 
   return (
     <div>
@@ -73,8 +103,26 @@ function ItemsPage() {
           </CardContent>
         </Card>
       </div>
+      <div className="flex justify-center p-1">
+        <Card>
+          <CardHeader>
+            <CardTitle>Search item</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <label htmlFor="search" className="sr-only">
+              Search item
+            </label>
+            <Input
+              placeholder={"Search item"}
+              onChange={(e) => {
+                handleSearch(e.target.value);
+              }}
+            />
+          </CardContent>
+        </Card>
+      </div>
       <div className="p-6">
-        <AllItems items={items} fetchItems={fetchItems} />
+        <AllItems items={items} currentPage={page} totalPages={totalPages} fetchItems={fetchItems} />
       </div>
     </div>
   );

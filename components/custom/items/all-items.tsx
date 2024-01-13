@@ -25,6 +25,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DestroyItem } from "@/lib/actions/item/destroy";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { ArrowLeftIcon, ChevronLeftIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 
 type Item = {
   id: number;
@@ -44,13 +55,22 @@ type Market = {
 
 type AllItemsProps = {
   items: Item[];
-  fetchItems: () => Promise<void>; // Add this line
+  fetchItems: (page: number) => Promise<void>; // Add this line
+  currentPage: number;
+  totalPages: number;
 };
 
-export default function AllItems({ items, fetchItems }: AllItemsProps) {
+export default function AllItems({
+  items,
+  fetchItems,
+  currentPage,
+  totalPages,
+}: AllItemsProps) {
+  const [page, setPage] = useState<number>(currentPage);
+
   async function handleDestroy(item: Item) {
     await DestroyItem(item);
-    fetchItems(); // Update the markets after a market is deleted
+    fetchItems(page); // Update the markets after a market is deleted
   }
 
   const [itemState, setItemState] = useState(items);
@@ -118,7 +138,7 @@ export default function AllItems({ items, fetchItems }: AllItemsProps) {
   const getMarketName = (marketId: number) => {
     const item = items.find((item) => item.marketId === marketId);
     return item ? item.id : items[0];
-  }
+  };
 
   return (
     <div className="flex flex-row">
@@ -206,6 +226,9 @@ export default function AllItems({ items, fetchItems }: AllItemsProps) {
         </Table>
       </div>
       <div className="flex flex-1"></div>
+      <div>
+        
+      </div>
     </div>
   );
 }

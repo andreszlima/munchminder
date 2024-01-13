@@ -10,25 +10,18 @@
 
 "use client";
 
+import LandingNav from "@/components/custom/landing-nav";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react"
-
+import { useEffect } from "react";
 
 function DashboardPage() {
-
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/dashboard/lists")
-  })
+    //router.push("/dashboard/lists");
+  }, []);
 
-  return (
-    <div>
-      
-    </div>
-  )
+  return <div><LandingNav /></div>;
 }
 
-
-export default DashboardPage
-
+export default DashboardPage;

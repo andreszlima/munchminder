@@ -81,7 +81,7 @@ export default function NewItem({ action }: NewItemProps) {
       price: 0,
       defaultAmount: 1,
       tax: 0,
-      marketId: 1,
+      marketId: 0,
       imageLink: "",
     },
   });
@@ -243,7 +243,7 @@ export default function NewItem({ action }: NewItemProps) {
           />
         </div>
         <div className="p-3 flex items-center justify-center">
-          <Button ref={submitButtonRef} type="submit">
+          <Button className="w-full" ref={submitButtonRef} type="submit">
             Add item
           </Button>
         </div>

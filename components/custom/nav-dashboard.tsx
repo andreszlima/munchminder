@@ -1,44 +1,28 @@
 "use client";
 
-import * as React from "react";
 import Link from "next/link";
 
-import { cn } from "@/lib/utils";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
-import { HamburgerMenuIcon, Pencil2Icon } from "@radix-ui/react-icons";
-import { UserButton, UserProfile } from "@clerk/nextjs";
+import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { UserButton } from "@clerk/nextjs";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
+  DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger
 } from "../ui/dropdown-menu";
 import NavLinkDashboard from "./nav-links";
 import { usePathname } from "next/navigation";
+import { ModeToggle } from "./toggle-dark";
 
 export default function NavDashboard() {
   const pathname = usePathname();
 
   return (
-    <div className="flex justify-between p-6 border border-white rounded-b-2xl">
+    <div className="flex justify-between p-6 border bg-white dark:bg-gray-900 items-center">
       <Link href={"/dashboard"} className="items-center">Logo</Link>
       <div className="md:flex hidden items-center">
+        <div className="px-2 items justify-center items-center"><ModeToggle /></div>
         <NavLinkDashboard reference="/dashboard/lists" text="Lists" />
         <NavLinkDashboard reference="/dashboard/items" text="Items" />
         <NavLinkDashboard reference="/dashboard/markets" text="Markets" />
@@ -52,7 +36,7 @@ export default function NavDashboard() {
             <HamburgerMenuIcon
               width={"32"}
               height={"32"}
-              className="hover:text-blue-500 hover:cursor-pointer"
+              className="hover:primary hover:cursor-pointer"
             />
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
