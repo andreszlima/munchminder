@@ -2,11 +2,7 @@
 
 import AddItem from "@/components/custom/list-items-table/add-item";
 import FullTable from "@/components/custom/list-items-table/full-table";
-import {
-  Card,
-  CardContent, CardHeader,
-  CardTitle
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AddItemToList } from "@/lib/actions/list-items/add-item";
 import { Authorize } from "@/lib/actions/list-items/authorize";
 import { ShowListItems } from "@/lib/actions/list-items/show-list";
@@ -72,9 +68,7 @@ export default function ListsPage() {
     getListName(parseInt(params.id)).then((listName) => {
       setListName(listName);
     });
-  },[isLoaded, user, params.id, getListName, fetchListItems, router]);
-
-
+  }, [isLoaded, user, params.id, getListName, fetchListItems, router]);
 
   const handleAddItem = async (formData: AddListItem) => {
     await AddItemToList(formData);
@@ -86,7 +80,10 @@ export default function ListsPage() {
       <div className="flex justify-center p-6">
         <Card>
           <CardHeader className="items-center">
-            <CardTitle>Add items to list: {listName}</CardTitle>
+            <CardTitle className="text-center">
+              <div>{listName}</div>
+              <div className="text-muted-foreground">Add items to list</div>
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <AddItem action={handleAddItem} listId={parseInt(params.id)} />
