@@ -136,7 +136,7 @@ export default function FullTable({ items, fetchListItems }: AllProps) {
                   }}
                 />
               </TableCell>
-              <TableCell>{item.item.name}</TableCell>
+              <TableCell className="">{item.item.name}</TableCell>
               <TableCell>{item.amount}</TableCell>
               <TableCell>{item.newPrice}</TableCell>
               <TableCell className="flex justify-center">

@@ -39,10 +39,10 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@radix-ui/react-icons";
-import Link from "next/link";
 import { IndexItems } from "@/lib/actions/item/index";
 import { SearchItems } from "@/lib/actions/item/search-items";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 
 type Item = {
   id: number;
@@ -235,88 +235,119 @@ export default function AllItems({
       <div className="flex flex-row">
         <div className="flex flex-1"></div>
         <div className="flex flex-auto">
-          <Table>
-            <TableCaption>List of items</TableCaption>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-center">Item name</TableHead>
-                <TableHead className="text-center">Price</TableHead>
-                <TableHead className="text-center">Default Amount</TableHead>
-                <TableHead className="text-center">Tax</TableHead>
-                <TableHead className="text-center">Market</TableHead>
-                <TableHead className="text-center">Remove item</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {itemState.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell>
-                    <Input
-                      type="text"
-                      value={item.name}
-                      onChange={(e) =>
-                        handleInputChange(item.id, "name", e.target.value)
-                      }
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Input
-                      type="number"
-                      value={item.price}
-                      onChange={(e) =>
-                        handleInputChange(item.id, "price", e.target.value)
-                      }
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Input
-                      type="number"
-                      value={item.defaultAmount}
-                      onChange={(e) =>
-                        handleInputChange(
-                          item.id,
-                          "defaultAmount",
-                          e.target.value
-                        )
-                      }
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Input
-                      type="number"
-                      value={item.tax}
-                      onChange={(e) =>
-                        handleInputChange(item.id, "tax", e.target.value)
-                      }
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Select
-                      onValueChange={(value) => {
-                        handleInputChange(item.id, "marketId", value);
-                      }}
-                      defaultValue={item.marketId.toString()}
-                    >
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Theme" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <MarketsSelect markets={markets} />
-                      </SelectContent>
-                    </Select>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex justify-center">
-                      <IoCloseSharp
-                        className="hover:text-red-600 hover:cursor-pointer text-2xl"
-                        onClick={() => handleDestroy(item)}
-                      />
-                    </div>
-                  </TableCell>
+        <div>
+            <Table className="hidden sm:table">
+              <TableCaption>List of items</TableCaption>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-center">Item name</TableHead>
+                  <TableHead className="text-center">Price</TableHead>
+                  <TableHead className="text-center">Default Amount</TableHead>
+                  <TableHead className="text-center">Tax</TableHead>
+                  <TableHead className="text-center">Market</TableHead>
+                  <TableHead className="text-center">Remove item</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {itemState.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell>
+                      <Input
+                        type="text"
+                        value={item.name}
+                        onChange={(e) =>
+                          handleInputChange(item.id, "name", e.target.value)
+                        }
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Input
+                        type="number"
+                        value={item.price}
+                        onChange={(e) =>
+                          handleInputChange(item.id, "price", e.target.value)
+                        }
+                      />
+                    </TableCell>
+                    <TableCell className="">
+                      <Input
+                        type="number"
+                        value={item.defaultAmount}
+                        onChange={(e) =>
+                          handleInputChange(
+                            item.id,
+                            "defaultAmount",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </TableCell>
+                    <TableCell className="">
+                      <Input
+                        type="number"
+                        value={item.tax}
+                        onChange={(e) =>
+                          handleInputChange(item.id, "tax", e.target.value)
+                        }
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Select
+                        onValueChange={(value) => {
+                          handleInputChange(item.id, "marketId", value);
+                        }}
+                        defaultValue={item.marketId.toString()}
+                      >
+                        <SelectTrigger className="">
+                          <SelectValue placeholder="Theme" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <MarketsSelect markets={markets} />
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex justify-center">
+                        <IoCloseSharp
+                          className="hover:text-red-600 hover:cursor-pointer text-2xl"
+                          onClick={() => handleDestroy(item)}
+                        />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          {/* ------------------------------------------------------------------------- */}
+          <div>
+            <Table className="sm:hidden">
+              <TableCaption>List of items</TableCaption>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-center">Item name</TableHead>
+                  <TableHead className="text-center">Remove item</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {itemState.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell>
+                      <Link href={`/dashboard/items/${item.id}`} className="underline">{item.name}</Link>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex justify-center">
+                        <IoCloseSharp
+                          className="hover:text-red-600 hover:cursor-pointer text-2xl"
+                          onClick={() => handleDestroy(item)}
+                        />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </div>
         <div className="flex flex-1"></div>
       </div>
