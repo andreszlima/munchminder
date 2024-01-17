@@ -18,8 +18,8 @@ function DashboardPage() {
   const router = useRouter();
 
   useEffect(() => {
-    //router.push("/dashboard/lists");
-  }, []);
+    router.push("/dashboard/lists");
+  }, [router]);
 
   return <div><LandingNav /></div>;
 }
