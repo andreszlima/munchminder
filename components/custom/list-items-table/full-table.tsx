@@ -138,7 +138,7 @@ export default function FullTable({ items, fetchListItems }: AllProps) {
               </TableCell>
               <TableCell className="">{item.item.name}</TableCell>
               <TableCell>{item.amount}</TableCell>
-              <TableCell>{item.newPrice}</TableCell>
+              <TableCell>{"Unit price: $" + item.newPrice + " - Total: $" + item.amount*item.newPrice}</TableCell>
               <TableCell className="flex justify-center">
                 <div className="flex justify-center">
                   <IoCloseSharp

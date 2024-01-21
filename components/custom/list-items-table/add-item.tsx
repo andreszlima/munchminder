@@ -41,8 +41,9 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
-import { CaretSortIcon } from "@radix-ui/react-icons";
+import { CaretSortIcon, ReloadIcon } from "@radix-ui/react-icons";
 import { set } from "lodash";
+import { CreateItemReturn } from "@/lib/actions/item/create-return";
 
 type ItemToList = {
   id: number;
@@ -72,6 +73,7 @@ const FormSchema = z.object({
     })
     .optional(),
   imageLink: z.string().optional(),
+  newName: z.string().optional(),
 });
 
 type InputProps = {
@@ -89,6 +91,9 @@ export default function AddItemToList({
   const [items, setItems] = useState<ItemToList[]>([]);
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(0);
+  const [hideNewNameField, setHideNewNameField] = useState<boolean>(true);
+  const [searchField, setSearchField] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   async function fetchItems() {
     const newItems = await GetAllItems();
@@ -107,17 +112,44 @@ export default function AddItemToList({
     defaultValues: {
       amount: 1,
       price: 0,
+      newName: "",
     },
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    const newItem = {
-      listId: listId,
-      itemId: data.id,
-      amount: Number(data.amount),
-      newPrice: data.price,
-    };
-    await action(newItem);
+    setLoading(true);
+    if (hideNewNameField) {
+      const newItem = {
+        listId: listId,
+        itemId: data.id,
+        amount: Number(data.amount),
+        newPrice: data.price,
+      };
+      await action(newItem);
+      form.reset({ id: 0, amount: 0, price: 0 });
+    } else {
+      const itemCreated = await CreateItemReturn({
+        name: data.newName || "",
+        price: data.price || 0,
+        defaultAmount: Number(data.amount),
+        tax: 0,
+        // TODO: Make sure this marketId exists in the database
+        marketId: 1,
+      });
+
+      const newItem = {
+        listId: listId,
+        itemId: itemCreated.id,
+        amount: Number(data.amount),
+        newPrice: data.price,
+      };
+      await action(newItem);
+      fetchItems();
+
+      setHideNewNameField(true);
+      form.reset({ id: 0, amount: 0, price: 0 });
+    }
+    setLoading(false);
   };
 
   function onError(errors: any) {
@@ -159,8 +191,22 @@ export default function AddItemToList({
                       <CommandInput
                         placeholder="Search item..."
                         className="h-9"
+                        onValueChange={(value) => {
+                          setSearchField(value);
+                        }}
                       />
-                      <CommandEmpty><a href={"/dashboard/items"}>Not found.<br/> Click here to create the item first</a></CommandEmpty>
+                      <CommandEmpty>
+                        <a
+                          onClick={() => {
+                            setHideNewNameField(false);
+                            setOpen(false);
+                            form.reset({ id: 0, amount: 1, price: 0 });
+                            form.setValue("newName", searchField);
+                          }}
+                        >
+                          <br /> Click here to add a new item
+                        </a>
+                      </CommandEmpty>
                       <CommandGroup>
                         {items.map((item) => (
                           <CommandItem
@@ -171,6 +217,7 @@ export default function AddItemToList({
                               setOpen(false);
                               form.setValue("amount", item.defaultAmount);
                               form.setValue("price", item.price);
+                              setHideNewNameField(true);
                             }}
                           >
                             {item.name}
@@ -194,6 +241,32 @@ export default function AddItemToList({
             )}
           />
         </div>
+
+        {!hideNewNameField && (
+          <div className="p-2">
+            <FormField
+              control={form.control}
+              name="newName"
+              render={({ field }) => (
+                <FormItem hidden={hideNewNameField}>
+                  <FormLabel>New item</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      onChange={(e) => {
+                        return field.onChange(e.target.value);
+                      }}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        )}
 
         <div className="p-2">
           <FormField
@@ -241,6 +314,7 @@ export default function AddItemToList({
           />
         </div>
         <Button className="p-2 w-full" type="submit">
+          {loading && <ReloadIcon className="h-4 w-4 mr-2 animate-spin" />}
           Add item
         </Button>
       </form>
