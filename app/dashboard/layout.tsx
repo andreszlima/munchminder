@@ -1,5 +1,6 @@
 import React from 'react'
 import NavDashboard from '@/components/custom/nav-dashboard'
+import { Toaster } from '@/components/ui/toaster'
 
 export default function LandingPage(
     { children }: { children: React.ReactNode }
@@ -8,6 +9,7 @@ export default function LandingPage(
     <div>
       <NavDashboard />
       {children}
+      <Toaster />
     </div>
   )
 }

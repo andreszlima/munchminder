@@ -3,9 +3,9 @@
 import { GetAllItems } from "@/lib/actions/list-items/get-items-to-list";
 import React, { useEffect, useState } from "react";
 
-import { Check, CheckIcon, ChevronsUpDown } from "lucide-react";
+import { CheckIcon } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast"
 
-import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -20,13 +20,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import {
   Popover,
@@ -42,7 +35,6 @@ import {
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 import { CaretSortIcon, ReloadIcon } from "@radix-ui/react-icons";
-import { set } from "lodash";
 import { CreateItemReturn } from "@/lib/actions/item/create-return";
 
 type ItemToList = {
@@ -94,6 +86,7 @@ export default function AddItemToList({
   const [hideNewNameField, setHideNewNameField] = useState<boolean>(true);
   const [searchField, setSearchField] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const { toast } = useToast();
 
   async function fetchItems() {
     const newItems = await GetAllItems();
@@ -150,6 +143,9 @@ export default function AddItemToList({
       form.reset({ id: 0, amount: 0, price: 0 });
     }
     setLoading(false);
+    toast({
+      description: `${data.newName || items.find((item) => item.id === data.id)?.name} added to list`,
+    });
   };
 
   function onError(errors: any) {
