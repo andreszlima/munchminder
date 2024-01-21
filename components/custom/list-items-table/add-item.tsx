@@ -41,7 +41,7 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
-import { CaretSortIcon } from "@radix-ui/react-icons";
+import { CaretSortIcon, ReloadIcon } from "@radix-ui/react-icons";
 import { set } from "lodash";
 import { CreateItemReturn } from "@/lib/actions/item/create-return";
 
@@ -93,6 +93,7 @@ export default function AddItemToList({
   const [value, setValue] = React.useState(0);
   const [hideNewNameField, setHideNewNameField] = useState<boolean>(true);
   const [searchField, setSearchField] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   async function fetchItems() {
     const newItems = await GetAllItems();
@@ -116,6 +117,7 @@ export default function AddItemToList({
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    setLoading(true);
     if (hideNewNameField) {
       const newItem = {
         listId: listId,
@@ -124,6 +126,7 @@ export default function AddItemToList({
         newPrice: data.price,
       };
       await action(newItem);
+      form.reset({ id: 0, amount: 0, price: 0 });
     } else {
       const itemCreated = await CreateItemReturn({
         name: data.newName || "",
@@ -146,7 +149,7 @@ export default function AddItemToList({
       setHideNewNameField(true);
       form.reset({ id: 0, amount: 0, price: 0 });
     }
-    form.reset({ id: 0, amount: 0, price: 0 });
+    setLoading(false);
   };
 
   function onError(errors: any) {
@@ -311,6 +314,7 @@ export default function AddItemToList({
           />
         </div>
         <Button className="p-2 w-full" type="submit">
+          {loading && <ReloadIcon className="h-4 w-4 mr-2 animate-spin" />}
           Add item
         </Button>
       </form>
