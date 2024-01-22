@@ -88,13 +88,13 @@ export default function AllItems({
   // Add this useEffect hook
   useEffect(() => {
     IndexMarkets().then(setMarkets);
-    setItemState(items);
-  }, [items]);
+    setItemState(itemState);
+  }, [itemState]);
 
   const fetchUpdatedItems = useCallback(
     async (page: number) => {
-      const { orderedItems } = await SearchItems(searchText, page, 8);
-      setItemState(orderedItems);
+      const { items } = await SearchItems(searchText, page, 8);
+      setItemState(items);
     },
     [searchText]
   );
@@ -174,7 +174,7 @@ export default function AllItems({
     setSearchText(text);
     const result = await SearchItems(text, 1, 8);
     setPage(1);
-    setItemState(result.orderedItems);
+    setItemState(result.items);
     setTotal(result.totalPages);
   }, 500);
 
@@ -235,7 +235,7 @@ export default function AllItems({
       <div className="flex flex-row">
         <div className="flex flex-1"></div>
         <div className="flex flex-auto">
-        <div>
+          <div>
             <Table className="hidden sm:table">
               <TableCaption>List of items</TableCaption>
               <TableHeader>
@@ -333,7 +333,12 @@ export default function AllItems({
                 {itemState.map((item) => (
                   <TableRow key={item.id}>
                     <TableCell>
-                      <Link href={`/dashboard/items/${item.id}`} className="underline">{item.name}</Link>
+                      <Link
+                        href={`/dashboard/items/${item.id}`}
+                        className="underline"
+                      >
+                        {item.name}
+                      </Link>
                     </TableCell>
                     <TableCell>
                       <div className="flex justify-center">

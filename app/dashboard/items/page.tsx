@@ -2,16 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import { useSearchParams, usePathname, useRouter } from "next/navigation";
 
 import {
   Card,
@@ -24,9 +14,6 @@ import NewItem from "@/components/custom/items/new-item";
 import { CreateItem } from "@/lib/actions/item/create";
 import { IndexItems } from "@/lib/actions/item";
 import AllItems from "@/components/custom/items/all-items";
-import { Input } from "@/components/ui/input";
-import { SearchItems } from "@/lib/actions/item/search-items";
-import { debounce } from "lodash";
 
 // type of item
 type Item = {
@@ -56,8 +43,8 @@ function ItemsPage() {
   const [totalPages, setTotalPages] = useState<number>(1);
 
   const fetchItems = async (page: number) => {
-    const { orderedItems, totalPages } = await IndexItems(page, 8);
-    setItems(orderedItems);
+    const { items, totalPages } = await IndexItems(page, 8);
+    setItems(items);
     setTotalPages(totalPages);
   };
 

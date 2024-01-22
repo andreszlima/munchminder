@@ -55,11 +55,5 @@ export async function SearchItems(text: string, page: number, pageSize: number) 
     take: pageSize,
   });
 
-  const orderedItems = lodash.sortBy(
-    items,
-    ["market.name", "name"],
-    ["asc", "asc"]
-  );
-
-  return { orderedItems, totalPages };
+  return { items, totalPages };
 }
