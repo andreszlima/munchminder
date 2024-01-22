@@ -8,6 +8,7 @@ export async function IndexLists(userSelection: string) {
       id: true,
       name: true,
       userId: true,
+      openList: true,
     },
     where: {
       OR: [{ userId: userSelection }, { openList: true }],

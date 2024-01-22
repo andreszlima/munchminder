@@ -18,6 +18,7 @@ type List = {
   id: number;
   name: string;
   userId: string;
+  openList: boolean;
 };
 
 type NewList = {
