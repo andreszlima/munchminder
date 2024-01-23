@@ -26,6 +26,7 @@ type ListItem = {
     market: {
       name: string;
     };
+    tax: number;
   };
 };
 
@@ -42,7 +43,7 @@ type TypeChecked = {
 export default function FullTable({ items, fetchListItems }: AllProps) {
   // Sum all item's newPrices
   const sum = items
-    ?.map((item) => item.newPrice * item.amount)
+    ?.map((item) => item.newPrice * item.amount * (1 + item.item.tax))
     .reduce((a, b) => a + b, 0)
     .toFixed(2);
 
@@ -50,10 +51,10 @@ export default function FullTable({ items, fetchListItems }: AllProps) {
     .groupBy("item.market.name")
     .map((objs, key) => ({
       market: key,
-      totalprice: lodash(objs).sumBy((o) => o.newPrice * o.amount),
+      totalprice: lodash(objs).sumBy((o) => o.newPrice * o.amount * (1 + o.item.tax)),
       checkedTotal: lodash(objs)
         .filter("selected")
-        .sumBy((o) => o.newPrice * o.amount),
+        .sumBy((o) => o.newPrice * o.amount * (1 + o.item.tax)),
     }))
     .value();
 
@@ -84,20 +85,10 @@ export default function FullTable({ items, fetchListItems }: AllProps) {
         }
       </div>
       <Table>
-        <TableCaption className="p-3">
-          {/* <div>
-            <div>Total price: ${sum}</div>
-            {
-              // @ts-ignore
-              summed?.map((item) => (
-                <div key={item.market}>
-                  <span className="font-bold">{item.market}</span> - Total: $
-                  {item.totalprice.toFixed(2)} | Checked: $
-                  {item.checkedTotal.toFixed(2)}
-                </div>
-              ))
-            }
-          </div> */}
+        <TableCaption className="pb-8">
+          <div>
+            <div>Items taxed have an asterisk before its price (*)</div>
+          </div>
         </TableCaption>
         <TableHeader>
           <TableRow>
@@ -138,7 +129,7 @@ export default function FullTable({ items, fetchListItems }: AllProps) {
               </TableCell>
               <TableCell className="">{item.item.name}</TableCell>
               <TableCell>{item.amount}</TableCell>
-              <TableCell>{"Unit price: $" + item.newPrice.toFixed(2) + " - Total: $" + (item.amount*item.newPrice).toFixed(2)}</TableCell>
+              <TableCell>{(item.item.tax ? "*" : "") + "Unit price: $" + item.newPrice.toFixed(2) + " - Total: $" + (item.amount*item.newPrice*(1+item.item.tax)).toFixed(2)}</TableCell>
               <TableCell className="flex justify-center">
                 <div className="flex justify-center">
                   <IoCloseSharp

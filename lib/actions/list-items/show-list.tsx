@@ -23,6 +23,7 @@ export async function ShowListItems(listId: number) {
               name: true,
             },
           },
+          tax: true,
         },
       },
     },

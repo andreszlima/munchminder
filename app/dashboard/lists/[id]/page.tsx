@@ -28,6 +28,7 @@ type ListItem = {
     market: {
       name: string;
     };
+    tax: number;
   };
 };
 
